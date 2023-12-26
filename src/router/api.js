@@ -1,5 +1,5 @@
 const express = require('express')
-const { brandList, categoryList, listByBrand, sliderList, listByCategory, listByKeyword, listByRemark, listBySimilar, productDetails,  productReviewList } = require('../controllers/ProductController')
+const { brandList, categoryList, listByBrand, sliderList, listByCategory, listByKeyword, listByRemark, listBySimilar, productDetails,  productReviewList, reviewList } = require('../controllers/ProductController')
 const { userOTP, userLogin, userLogOut, creteProfile, updateProfile, readProfile } = require('../controllers/UserController')
 const AuthVerification = require('../middleware/AuthVerification')
 const { createWishList, removeWishList, wishList } = require('../controllers/WishListController')
@@ -17,7 +17,7 @@ router.get('/ProductListBySmilier/:CategoryID', listBySimilar )
 router.get('/ProductListByKeyword/:Keyword', listByKeyword )
 router.get('/ProductListByRemark/:Remark', listByRemark )
 router.get('/ProductDetails/:ProductID', productDetails )
-router.get('/ProductReviewList/:ProductID', productReviewList )// hoini
+router.get('/ProductReviewList/:ProductID', reviewList )
 
 
 // user 

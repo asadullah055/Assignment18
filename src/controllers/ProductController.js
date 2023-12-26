@@ -49,5 +49,7 @@ exports.productDetails = async (req, res) => {
   const result = await detailsService(req);
   return res.status(200).json(result);
 };
-exports.productReviewList = async (req, res) => {};
-exports.createProductReview = async (req, res) => {};
+exports.reviewList = async (req, res) => {
+  const result = await reviewListService(req);
+  res.status(200).json(result);
+}

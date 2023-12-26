@@ -3,6 +3,7 @@ const CategoryModel = require("../models/CategoriesModel");
 const ProductSliderModel = require("../models/ProductSliderModel");
 const ProductModel = require("../models/ProuctModel");
 const mongoose = require("mongoose");
+const reviewModel = require("../models/ReviewModel");
 const ObjectId = mongoose.Types.ObjectId;
 const brandListService = async (req, res) => {
   try {
@@ -246,7 +247,7 @@ const listBySimilarService = async (req, res) => {
     return { status: "failed", messaged: error }.toString();
   }
 };
-const reviewListService = async (req, res) => {};
+
 const detailsService = async (req, res) => {
   try {
     let productId = new ObjectId(req.params.ProductID);
@@ -285,7 +286,7 @@ const detailsService = async (req, res) => {
         "category._id": 0,
         categoryID: 0,
         brandID: 0,
-        
+
         createdAt: 0,
         updatedAt: 0,
         brand: {
@@ -371,20 +372,42 @@ const listByKeywordService = async (req, res) => {
     const data = await ProductModel.aggregate([
       MatchStage,
       joinWithBrandStage,
-        joinWithCategoryStage,
+      joinWithCategoryStage,
       joinWithDetailsStage,
       UnwindBrandStage,
       UnwindCategoryStage,
       UnwindDetailsStage,
-      projectionStage, 
+      projectionStage,
     ]);
     return { status: "success", data };
   } catch (error) {
-    console.log(error);
     return { status: "failed", messaged: error }.toString();
   }
 };
+const reviewListService = async (req) => {
+  try {
+    const ProductID = new ObjectId(req.params.ProductID);
+    const MatchStage = { $match: { productID: ProductID } };
+    const JoinWithUserStage = {
+      $lookup: {
+        from: "users",
+        localField: "userID",
+        foreignField: "_id",
+        as: "user",
+      },
+    };
+    const UnwindUserState = { $unwind: "$user" };
 
+    const data = await reviewModel.aggregate([
+      MatchStage,
+      JoinWithUserStage,
+      UnwindUserState,
+    ]);
+    return { status: "success", data: data };
+  } catch (error) {
+    return { status: "failed", messaged: error }.toString();
+  }
+};
 module.exports = {
   brandListService,
   categoryListService,
